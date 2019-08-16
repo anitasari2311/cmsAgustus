@@ -1,0 +1,175 @@
+<html>
+
+<link rel="stylesheet" href="style.css">
+<style>
+  #myList {width: 200; list-style: none; margin: 0; auto 0 auto;}
+  #myList li {list-style-type: none; float: left; width: 100px;}
+  #myList li label{width: 200px; padding: 2px 10px 0 8px; display: inline-block;}
+</style>
+
+  <title> Add New Schedule </title>
+
+
+<div class ="containerJudul">
+  <center>  <h1> Add New Schedule </h1> </center>
+</div>
+
+
+
+<div class ="row">
+  <div class ="col-15">
+    <label for="kodeReport">Pilih Report : </label>
+  </div>
+        <input type="text" class = "col-10" id="kodeReport" name="kodeLaporan" value="{{KodeReport}}">
+
+  <div class ="col-15">
+    <label for="organisasi">Organisasi : </label>
+  </div>
+        <input type="text" class = "col-10" id="organisasi" name="organisasi" value="{{Organisasi}}">
+
+  <div class ="col-15">
+    <label for="server">Server : </label>
+  </div>
+        <input type="text" class = "col-10" id="server" name="server" value="{{Server}}">
+
+  <div class ="col-15">
+    <label for="kategori">Kategori : </label>
+  </div>
+        <input type="text" class = "col-10" id="kategori" name="kategori" value="{{Kategori}}">
+
+</div>
+
+
+<br>
+
+
+<div class ="row">
+  <div class ="col-15">
+    <label for="header">Header : </label>
+  </div>
+    <input type="text" id="header" name="header" placeholder="">
+</div>
+
+<div class ="row">
+  <div class ="col-15">
+    <label for="keterangan">Keterangan : </label>
+  </div>
+    <textarea id="keterangan" name="keterangan"> </textarea>
+</div>
+
+<div class ="row">
+  <div class ="col-15">
+    <label for="note">Note : </label>
+  </div>
+    <input type="text" id="note" name="note" placeholder="">
+</div>
+
+<div class ="row">
+  <div class ="col-15">
+    <label for="penerima">Dikirim ke : </label>
+  </div>
+    <textarea id="penerima" name="penerima"> </textarea>
+</div>
+
+<div class ="row">
+  <div class ="col-15">
+    <label for="grouping">Grouping : </label>
+  </div>
+    <input type="text" id="grouping" name="grouping" placeholder="">
+</div>
+
+
+<div class ="row">
+  <div class ="col-15">
+    <label for="grouping">Grouping : </label>
+  </div>
+  <input type="radio" name"hariBulan" >Hari+Bulan
+  <input type="radio" name"tanggalBulan" >Tanggal+Bulan
+
+        <label for="grouping">Order by :</label>
+
+      <input type="text" id="grouping" name="grouping" placeholder="">
+</div>
+
+<br>
+
+
+<div class ="row">
+  <div class ="col-15">
+
+  </div>
+
+      <div class ="myBox">
+            <ul id="myList">
+              <li><input type="checkbox" name="Januari">Januari</li>
+              <li><input type="checkbox" name="">Februari</li>
+              <li><input type="checkbox" name="">Maret</li>
+              <li><input type="checkbox" name="">April</li>
+              <li><input type="checkbox" name="">Mei</li>
+              <li><input type="checkbox" name="">Juni</li>
+              <li><input type="checkbox" name="">Juli</li>
+              <li><input type="checkbox" name="Agustus">Agustus</li>
+              <li><input type="checkbox" name="">September</li>
+              <li><input type="checkbox" name="">Oktober</li>
+              <li><input type="checkbox" name="">November</li>
+              <li><input type="checkbox" name="">Desember</li>
+            </ul>
+      </div>
+
+      <div class ="myBox">
+            <ul id="myList">
+              <li><input type="checkbox" name="Senin">Senin</li>
+              <li><input type="checkbox" name="Selasa">Selasa</li>
+              <li><input type="checkbox" name="Rabu">Rabu</li>
+              <li><input type="checkbox" name="Kamis">Kamis</li>
+              <li><input type="checkbox" name="Jumat">Jumat</li>
+              <li><input type="checkbox" name="Sabtu">Sabtu</li>
+              <li><input type="checkbox" name="Minggu">Minggu</li>
+            </ul>
+      </div>
+
+      <div class ="myBox">
+            <ul id="myList">
+              <li><input type="checkbox" name="1">1</li>
+              <li><input type="checkbox" name="2">2</li>
+              <li><input type="checkbox" name="3">3</li>
+              <li><input type="checkbox" name="4">4</li>
+              <li><input type="checkbox" name="5">5</li>
+              <li><input type="checkbox" name="6">6</li>
+              <li><input type="checkbox" name="7">7</li>
+              <li><input type="checkbox" name="8">8</li>
+              <li><input type="checkbox" name="9">9</li>
+              <li><input type="checkbox" name="10">10</li>
+              <li><input type="checkbox" name="11">11</li>
+              <li><input type="checkbox" name="12">12</li>
+              <li><input type="checkbox" name="13">13</li>
+              <li><input type="checkbox" name="14">14</li>
+              <li><input type="checkbox" name="15">15</li>
+              <li><input type="checkbox" name="16">16</li>
+              <li><input type="checkbox" name="17">17</li>
+              <li><input type="checkbox" name="18">18</li>
+              <li><input type="checkbox" name="19">19</li>
+              <li><input type="checkbox" name="20">20</li>
+              <li><input type="checkbox" name="21">21</li>
+              <li><input type="checkbox" name="22">22</li>
+              <li><input type="checkbox" name="23">23</li>
+              <li><input type="checkbox" name="24">24</li>
+              <li><input type="checkbox" name="25">25</li>
+              <li><input type="checkbox" name="26">26</li>
+              <li><input type="checkbox" name="27">27</li>
+              <li><input type="checkbox" name="28">28</li>
+              <li><input type="checkbox" name="29">29</li>
+              <li><input type="checkbox" name="30">30</li>
+              <li><input type="checkbox" name="31">31</li>
+            </ul>
+      </div>
+
+</div>
+
+<br><br>
+<center>
+<button>Simpan</button>
+<button>Batal</button>
+</center>
+
+</html>

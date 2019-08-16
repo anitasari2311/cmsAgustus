@@ -1,0 +1,107 @@
+<html>
+<link rel="stylesheet" href="style.css">
+
+  <title> Edit Report </title>
+
+<div class ="containerJudul">
+  <center>  <h1> Edit Report </h1> </center>
+</div>
+
+
+<div class ="row">
+  <div class ="col-15">
+    <label for="kodeReport">Kode Report : </label>
+  </div>
+        <input type="text" class = "col-10" id="kodeReport" name="kodeLaporan" value="{{KodeReport}}">
+
+  <div class ="col-15">
+    <label for="periode">Periode : </label>
+  </div>
+        <input type="text" class = "col-10" id="kodeReport" name="kodeLaporan" value="{{Periode}}">
+
+  <div class ="col-15">
+    <label for="periode">Print All : </label>
+  </div>
+        <input type="text" class = "col-10" id="printAll" name="printAll" value="{{PrintAll}}">
+
+</div>
+
+<br><br>
+
+
+<div class ="row">
+  <div class ="col-15">
+    <label for="namaReport">Nama Report : </label>
+  </div>
+    <input type="text" id="namaReport" name="namaReport" value="{{NamaReport}}">
+</div>
+
+
+
+
+<div class ="row">
+  <div class ="col-15">
+    <label for="jmlHeader">Jumlah Header : </label>
+  </div>
+        <input type="text" class = "col-10" id="jmlHeader" name="jmlHeader" value="{{Header}}">
+
+  <div class ="col-15">
+    <label for="jmlFooter">Jumlah Footer : </label>
+  </div>
+        <input type="text" class = "col-10" id="jmlFooter" name="jmlFooter" value="{{Footer}}">
+
+  <div class ="col-15">
+    <label for="jmlKolom">Jumlah Kolom : </label>
+  </div>
+        <input type="text" class = "col-10" id="jmlKolom" name="jmlKolom" value="{{Kolom}}">
+
+</div>
+
+
+<div class ="row">
+  <div class ="col-15">
+    <label for="rataTengah">Kolom rata tengah : </label>
+  </div>
+        <input type="text" class = "col-10" id="rateTengah" name="rataTengah" value="{{Tengah}}">
+
+  <div class ="col-15">
+    <label for="rataKanan">Kolom rata kanan : </label>
+  </div>
+        <input type="text" class = "col-10" id="rataKanan" name="rataKanan" value="{{Kanan}}">
+
+</div>
+
+
+
+<!-- LOOPING KOLOM -->
+
+{{% if XXXXX %}}
+
+<div class ="row">
+  <div class ="col-15">
+    <label for="kolom">Kolom (i) : </label>
+  </div>
+        <input type="text" class = "col-10" id="kolom" name="kolom" value="{{Kolom}}">
+
+        <select id="kolom" class = "col-10" name="kolom">
+          <option value="{{Kolom}}">{{Kolom]}}</option>
+        </select>
+
+        <select id="jenis" class = "col-10" name="jenis">
+          <option value="{{jenis}}">{{String/Int]}}</option>
+        </select>
+
+        <input type="text" class = "col-10" id="lebar" name="lebar" value="{{Lebar}}">
+
+        <input type="text" class = "col-10" id="lebar2" name="lebar2" value="{{Lebar2}}">
+
+  </div>
+      {{% endif %}}
+
+{{% if footer %}}
+
+<div class ="row">
+  <div class ="col-15">
+    <label for="footer">Footer (i) : </label>
+  </div>
+        <input type="text" class = "col-10" id="kolom" name="kolom" value="{{Footer}}">
