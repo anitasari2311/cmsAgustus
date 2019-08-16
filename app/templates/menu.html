@@ -1,0 +1,162 @@
+<html>
+  <head>
+	   <title>Menu</title>
+	   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+    <body>
+    
+     <center>   <div style="padding-top: 30px;padding-bottom: 20px; font-family: 'Arial';font-size: 20px;"> 
+                     
+                </div> </center>
+      <div class="container2">
+         <h2> Welcome, {{session['username']}}</h2>
+            <center>
+             <h2>MENU</h2>
+              <br>
+    
+                <div class="row">
+                  <form action='/formRequest'>
+                  <button class="submit" value="Request Laporan">New Request Report</button> <br>
+
+                </form>
+                <form action ='/editRequest'>
+                  <button class="submit" value="Edit Laporan">Edit Report</button> <br>
+                </form>
+
+                </form>
+                <form action ='/logout'>
+                  <button class="submit" value="Log Out">Log Out</button> <br>
+                </form>
+
+                
+                </div>
+            </center> <br><br><br>
+
+      
+       
+                          <h3>List Request </h3>
+
+                    <table id="list">
+                      <tr>
+                        <th>Request Code</th>
+                        <th>Title</th>
+                        <th>Request Date</th>
+                        <th>Deadline</th>
+                        <th>Status</th>
+                        <th>PIC</th>
+                        <th></th>
+                      </tr>
+                  
+                  {% for row in listReqUser %}
+                      <tr>
+                        <td> {{row[0]}} </td>            
+                        <td> {{row[1]}} </td>
+                        <td>{{row[2]}}</td>
+                        
+                        <td>{{row[3]}}</td>
+                       
+                        
+                       {% if row[4] == 'Finished' %}
+                       <td>{{row[6]}}</td>
+                       {% else %}
+                        <td>{{row[4]}}</td>
+                        {% endif %}
+                        <td>{{row[5]}}</td>
+
+                        {% if row[4] == 'Waiting' %}
+                        <td> 
+                          <!-- <form action="/revisi" method="post">  
+                            <button class="submitOr" name="btnRevisi" value="{{row[0]}}">Revision</button>
+                          </form> -->
+                          <form action = "/cancel" method = "post">
+                            <button class="submitRed" name="btnCancel" value = "{{row[0]}}">Cancel</button></form></td>
+
+
+
+
+                        {% elif row[4] == 'Finished' %}
+                        <!-- <td>
+                          <form action = "/revisi" method = "post">
+                          <button class="submitOr" name="btnRevisi" value="{{row[0]}}">Revision</button>
+                        </form>
+                          <form action ="/confirmRequest" method ="POST">
+                            <button class="submit" name="confirmReq" value ="{{row[0]}}">Confirm</button> </td>
+                          </form> -->
+                          <td></td>
+
+
+
+
+                        {% elif row[4] == 'On Process' %}
+                        <!-- <td><button class="submit2" disabled>Revision</button><br>
+                            <button class="submit2" disabled>Confirm</button> </td> -->
+                            <td></td>
+
+
+
+
+
+                        {% elif row[4] == 'Confirmed' %}
+                        <td>"Done"</td>{% endif %}
+
+                      </tr>
+                      {% endfor %}
+                      
+
+                    </table> 
+                  <!-- </form> -->
+                                <br><br><br>
+                <h2>__________________________________________________________________________</h2>
+                                <br><br><br>
+
+
+                      <h3>List Report</h3>
+
+                      <table id="list">
+                        <tr>
+                          <th>Report Code</th>
+                          <th>Title</th>
+                          <th>Request Date</th>
+                          <th>PIC</th>
+                          <th></th>
+                        
+                        </tr>
+
+                        {% for row in  listKelar %}
+                        <tr >
+                          <td>{{row[0]}}</td>
+                          <td>{{row[1]}}</td>
+                          <td>{{row[2]}}</td>
+                          <td>{{row[3]}}</td>
+                          <td></td>
+                       
+                        </tr>
+                        {% endfor %}
+                      </table>
+
+      </div>
+     
+<!-- <script>
+function myFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("list");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+</script> -->
+
+    </body>
+</html>
+

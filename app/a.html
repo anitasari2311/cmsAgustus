@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<button id="btn-1" onclick="proses(this.id)"> btn 1</button>
+	<button id="btn-2" onclick="proses(this.id)"> btn 2</button>
+	<button id="btn-3" onclick="proses(this.id)"> btn 3</button>
+	<button id="btn-4" onclick="proses(this.id)"> btn 4</button>
+	<button id="btn-5" onclick="proses(this.id)"> btn 5</button>
+</body>
+	<script type="text/javascript">
+		var btn_count;
+		btn_count = document.getElementsByTagName('button').count()
+		var i;
+		var id_btn;
+		function proses(clicked_id){
+			id_btn = document.getElementById(clicked_id);
+			id_btn.style.backgroundColor = 'red';
+			alert('hello');
+		}
+	</script>
+</html>
