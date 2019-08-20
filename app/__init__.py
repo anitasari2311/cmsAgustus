@@ -12,6 +12,10 @@ app.static_folder = 'static'
 app.secret_key = 'session1'
 
 ##########################                  LOGIN                          ############################
+@app.route('/atasan')
+def atasan():
+    return render_template('taskSPV.html')
+
 
 @app.route('/')
 def start():
@@ -24,9 +28,6 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for('login'))
-
-
-
 
 
 
@@ -72,11 +73,7 @@ def confirmRequest():
         return redirect(url_for("user"), confirm.confirmRequest(request_id))
 
 
-
-
-
-
-### Untuk Button Cancel di Menu User
+#Untuk Button Cancel di Menu User
 @app.route('/cancel', methods = ['POST'])
 def cancel():
     if request.method == 'POST':
@@ -93,6 +90,8 @@ def formRequest():
     newRequest = RequestLaporan()
     return render_template("requestLaporan.html", listOrg = newRequest.namaOrganisasi(), listDept = newRequest.namaDept(), listPIC = newRequest.namaPIC())
 
+
+#BUAT NEW REQUEST
 @app.route('/newReq', methods = ['POST'])
 def newReq():
      if request.method == 'POST':
@@ -108,28 +107,17 @@ def newReq():
             Department = request.form['Department']
             Display = request.form['inputDisplay']
             Period = request.form['inputPeriode']
-            # tanggalSelesai = request.form['tanggalSelesai']
-            # bulanSelesai = request.form['bulanSelesai']
-            # tahunSelesai = request.form['tahunSelesai']
             deadline = request.form['deadline']
             inputFile = request.form['inputFile']
             
-            #PIC = request.form['boxPIC']
-            
-            #inputFile.save(secure_filename(f.filename))
-            
-            # report_id = request.form['']
-            # query_id = request.form              reqSch_hari = request.form.get['hari']
-            # for checkHari in ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Ming']:
-            
-            #     if request.form.get(checkHari) is not None:
-            #         if reqSch_hari == '':
-            #             reqSch_hari +=  request.form.get(checkHari)
-            #         else:
-            #             reqSch_hari +=  ", "+request.form.get(checkHari)
-            # print (reqSch_hari)
 
-            reqSch_hari = request.form.getlist('haritest')
+            # reqSch_hari = request.form.getlist('haritest')
+            for checkHari in ['senin','selasa','rabu','kamis','jumat','sabtu','minggu']:
+                if request.form.get(checkHari) is not None:
+                    if reqSch_hari == '':
+                        reqSch_hari += request.form.get(checkHari)
+                    else:
+                        reqSch_hari +=  ", "+request.form.get(checkHari)
             print(reqSch_hari)
 
             for checkBulan in ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agus', 'Sept', 'Okt', 'Nov', 'Des']:
@@ -147,23 +135,68 @@ def newReq():
                         reqSch_tanggal +=  ", "+request.form.get(checkTgl)
             print (reqSch_tanggal)
 
-            flash('Request berhasil dibuat')                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
-            # reqSch_groupBy = 'Dr. Andre Lembong'
-            # reqSch_reportPIC = request.form['PIC']
-            # reqSch_lastUpdate = None
-            # reqSch_aktifYN = 'Y'
-
+            flash('Request berhasil dibuat!')                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+           
 
             newRequest.requestLaporanBaru( None, session['user_id'], Organization, Department, None, title, description,
                              purpose, Display, Period, deadline, "\bin", None, None,
                              reqSch_hari, reqSch_bulan, reqSch_tanggal,
                              Organization,Department, None, None)
-            # newRequest.requestSchedule(reqSch_hari, reqSch_bulan, reqSch_tanggal, 'Dr. Andre Lembong',
-            #                  None, None, 'Y')
-           # return render_template("menu.html",listReqUser = newRequest.listRequestUser(session['username']))
-            
+
             
             return redirect(url_for('user'))
+
+
+# #BUAT EDIT REQUEST
+# @app.route('/editReq', methods = ['POST'])
+# def editReq():
+#      if request.method == 'POST':
+#             reqSch_hari = ''
+#             reqSch_bulan = ''
+#             reqSch_tanggal = ''
+#             newRequest = RequestLaporan()
+           
+#             title = request.form['inputTitle']
+#             purpose = request.form['inputPurpose']
+#             description = request.form['keteranganlaporan']
+#             Organization = request.form['Organization']
+#             Department = request.form['Department']
+#             Display = request.form['inputDisplay']
+#             Period = request.form['inputPeriode']
+#             deadline = request.form['deadline']
+#             inputFile = request.form['inputFile']
+            
+        
+
+#             reqSch_hari = request.form.getlist('haritest')
+#             print(reqSch_hari)
+
+#             for checkBulan in ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agus', 'Sept', 'Okt', 'Nov', 'Des']:
+#                 if request.form.get(checkBulan) is not None:
+#                     if reqSch_bulan == '':
+#                         reqSch_bulan += request.form.get(checkBulan)
+#                     else:
+#                         reqSch_bulan +=  ", "+request.form.get(checkBulan)
+#             print (reqSch_bulan) 
+#             for checkTgl in ['t1', 't2', 't3', 't4', 't5', 't6', 't7', 't8', 't9', 't10', 't11', 't12', 't13', 't14', 't15', 't16', 't17', 't18', 't19', 't20', 't21', 't22', 't23', 't24', 't25', 't26', 't27', 't28', 't29', 't30', 't31']:
+#                 if request.form.get(checkTgl) is not None:
+#                     if reqSch_tanggal == '':
+#                         reqSch_tanggal += request.form.get(checkTgl)
+#                     else:
+#                         reqSch_tanggal +=  ", "+request.form.get(checkTgl)
+#             print (reqSch_tanggal)
+
+#             flash('Request berhasil dibuat!')                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+           
+
+#             newRequest.requestLaporanBaru( None, session['user_id'], Organization, Department, None, title, description,
+#                              purpose, Display, Period, deadline, "\bin", None, None,
+#                              reqSch_hari, reqSch_bulan, reqSch_tanggal,
+#                              Organization,Department, None, None)
+
+            
+#             return redirect(url_for('user'))
+
 #EDIT REQUEST
 @app.route('/editRequest',methods=['GET', 'POST'])
 def edit():
@@ -175,59 +208,78 @@ def edit():
 @app.route('/formEdit', methods=['POST','GET'])
 def formEdit():
         newRequest = TemplateLaporan()
-        session['kodeLaporan'] = request.form['kodeLaporan']
-        print("test",session['kodeLaporan'])
-        cur = newRequest.getCurrentDisplay(session['kodeLaporan'])
-        return render_template("EditKolom.html",listcurrentdisplay = cur)
+        newRequest2 = RequestLaporan()
 
+
+        session['kodeLaporan'] = request.form['kodeLaporan']
+
+
+        
+        cur = newRequest.getCurrentDisplay(session['kodeLaporan'])
+        
+        print("Kode Laporan Edit: ",session['kodeLaporan'])
+        return render_template("EditKolom.html",listcurrentdisplay = cur, listPIC = newRequest2.namaPIC())
+
+#BUAT EDIT REQUEST
 @app.route('/newEdit', methods = ['POST'])
 def newEdit():
     if request.method == 'POST':
-        newRequest = RequestLaporan()
+            reqSch_hari = ''
+            reqSch_bulan = ''
+            reqSch_tanggal = ''
+            newRequest = RequestLaporan()
 
-        filterBaru = request.form['inputFilterBaru']
-        newDisplay = request.form['inputNewDisplay']
-        deadline = request.form['deadline']
-        # tanggalSelesai = request.form['tanggalSelesai']
-        # bulanSelesai = request.form['bulanSelesai']
-        # tahunSelesai = request.form['tahunSelesai']
-        #inputFile = request.form['inputFile']
+            
 
+            filterBaru = request.form['inputFilterBaru']
+            newDisplay = request.form['inputNewDisplay']
+            deadline = request.form['deadline']
 
-        newRequest.requestEditLap( None, session['username'],session['kodeLaporan'], None, filterBaru,
+            # reqSch_hari = request.form.getlist('haritest')
+            # print(reqSch_hari)
+
+            for checkHari in ['senin','selasa','rabu','kamis','jumat','sabtu','minggu']:
+                if request.form.get(checkHari) is not None:
+                    if reqSch_hari == '':
+                        reqSch_hari += request.form.get(checkHari)
+                    else:
+                        reqSch_hari +=  ", "+request.form.get(checkHari)
+            print(reqSch_hari)
+
+            for checkBulan in ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agus', 'Sept', 'Okt', 'Nov', 'Des']:
+                if request.form.get(checkBulan) is not None:
+                    if reqSch_bulan == '':
+                        reqSch_bulan += request.form.get(checkBulan)
+                    else:
+                        reqSch_bulan +=  ", "+request.form.get(checkBulan)
+            print (reqSch_bulan) 
+
+            for checkTgl in ['t1', 't2', 't3', 't4', 't5', 't6', 't7', 't8', 't9', 't10', 't11', 't12', 't13', 't14', 't15', 't16', 't17', 't18', 't19', 't20', 't21', 't22', 't23', 't24', 't25', 't26', 't27', 't28', 't29', 't30', 't31']:
+                if request.form.get(checkTgl) is not None:
+                    if reqSch_tanggal == '':
+                        reqSch_tanggal += request.form.get(checkTgl)
+                    else:
+                        reqSch_tanggal +=  ", "+request.form.get(checkTgl)
+            print (reqSch_tanggal)
+
+            flash('Request berhasil dibuat!')   
+
+            newRequest.requestEditLap( None, session['user_id'],session['kodeLaporan'] , session['kodeLaporan'], filterBaru,
                              newDisplay, deadline, "\bin",
-                                None, None)
-    
-        return render_template("menu.html",listReqUser = newRequest.listRequestUser(session['username']))
+                                None, None, reqSch_hari, reqSch_bulan, reqSch_tanggal)
+            
+
+            
+            return redirect(url_for('user'))
 
 
-# @app.route('/EditRev', methods = ['POST'])
-# def newEdit():
-#     if request.method == 'POST':
-#         newRequest = RequestLaporan()
-#         kodLap = request.form['submitRev']
-#         filterBaru = request.form['inputFilterBaru']
-#         newDisplay = request.form['inputNewDisplay']
-#         deadline = request.form['deadline']
-#         # tanggalSelesai = request.form['tanggalSelesai']
-#         # bulanSelesai = request.form['bulanSelesai']
-#         # tahunSelesai = request.form['tahunSelesai']
-#         #inputFile = request.form['inputFile']
 
-
-#         newRequest.requestEditLap( None, session['user_id'],kodLap, 'K271', filterBaru,
-#                              newDisplay, deadline, "\bin", None, None)
-        
-#         return redirect(url_for("menu"), listReqUser = newRequest.listRequestUser(session['username']))
-#         #return render_template("menu.html")
-
-
-@app.route('/revisi', methods = ['GET', 'POST'])
-def revisi():
-    revisi = TemplateLaporan()
-    revisi_id = request.form['btnRevisi']
-    cur = revisi.getRevisiDisplay(revisi_id)
-    return render_template("EditRevisi.html",listrevisidisplay = cur)
+# @app.route('/revisi', methods = ['GET', 'POST'])
+# def revisi():
+#     revisi = TemplateLaporan()
+#     revisi_id = request.form['btnRevisi']
+#     cur = revisi.getRevisiDisplay(revisi_id)
+#     return render_template("EditRevisi.html",listrevisidisplay = cur)
 
 
 

@@ -55,7 +55,6 @@
                       <select name='Organization'>
                         {% for row in listOrg %}
                         <option value="{{row[0]}}">{{row[0]+" - "+row[1]}}</option>
-                       <!--  <strong>{{text}}</strong> -->
                          {% endfor %}
                       </select>
                     </div>
@@ -95,37 +94,6 @@
                   </div>
 
     
-
-                 <!--  <div class="row">
-                    <div class="col-25">
-                      <label for="tanggalselesai">Deadline</label>
-                    </div> -->
-
-                    <!-- <div class="col-15">
-                      <select id="country" name="tanggalSelesai">
-                        <option value="01">01</option>
-                        <option value="02">02</option>
-                        <option value="03">03</option>
-                      </select>
-                    </div>
-
-                    <div class="col-15">
-                      <select id="country" name="bulanSelesai">
-                        <option value="01">June</option>
-                        <option value="02">July</option>
-                        <option value="03">August</option>
-                      </select>
-                    </div>
-
-                    <div class="col-15">
-                      <select id="country" name="tahunSelesai">
-                        <option value="01">2018</option>
-                        <option value="02">2019</option>
-                        <option value="03">2020</option>
-                      </select>
-                    </div>
-                  </div> -->
-
                   <div class="row">
                     <div class="col-25">
                       <label for="deadline">Deadline</label>
@@ -179,9 +147,7 @@
                   <!-- HARIBULAN TANGGAL BULAN -->
                   <input type ="radio" id="dm" value="hb" name="rutin" onclick="myFunction2()">Day+Month</input>
                   <input type ="radio" id="dm2" value="tb" name="rutin" onclick ="myFunction3()">Date+Month</input>
-           <!--        <input type="checkBox" name="Day" id="myCheck2" onclick="myFunction2()">Day</input>
-                  <input type="checkBox" name="Date" id="myCheck3" onclick="myFunction3()">Date</input>
-                  <input type="checkBox" name="Month" id="myCheck4" onclick="myFunction4()">Month</input> -->
+
                 </div>
               </div>
 
@@ -197,16 +163,17 @@
                 <div id="Day" style="display: none">
                   <div class ="myBox" >
 
-                    <input type="checkbox" name="haritest" value="Senin">Senin<br>
-                    <input type="checkbox" name="haritest" value="Selasa">Selasa<br>
-                    <input type="checkbox" name="haritest" value="Rabu">Rabu<br>
-                    <input type="checkbox" name="haritest" value="Kamis">Kamis<br>
-                    <input type="checkbox" name="haritest" value="Jumat">Jumat<br>
-                    <input type="checkbox" name="haritest" value="Sabtu">Sabtu<br>
-                    <input type="checkbox" name="haritest" value="Minggu">Minggu<br>  
+                    <input type="checkbox" name="senin" value="Senin">Senin<br>
+                    <input type="checkbox" name="selasa" value="Selasa">Selasa<br>
+                    <input type="checkbox" name="rabu" value="Rabu">Rabu<br>
+                    <input type="checkbox" name="kamis" value="Kamis">Kamis<br>
+                    <input type="checkbox" name="jumat" value="Jumat">Jumat<br>
+                    <input type="checkbox" name="sabtu" value="Sabtu">Sabtu<br>
+                    <input type="checkbox" name="minggu" value="Minggu">Minggu<br>  
                                                               
                   </div>
                 </div>
+
                 <div id="Date" style="display: none">
                   <div class ="myBox" >
                     <input type="checkbox" name="t1" value="1">1<br>
@@ -300,7 +267,7 @@
                               </div>
                             </div>
 
-                            <div class ="myBoxPIC">
+      <div class ="myBoxPIC">
            
               <input type="text" id="myInput" onkeyup="myFunction5()" placeholder="Search for names.." title="Type in a name">
               <table id="list">
@@ -392,7 +359,6 @@
         </center>
         </body>
 </html>
-
 
 
 <script>
@@ -491,44 +457,4 @@ function myFunction6() {
 
 
 
-//   if(check1.checked == true && check2.checked == false && check3.checked == false){
-//     Days.style.display = "block";
-//   }else if (check1.checked == false && check2.checked == true && check3.checked == false){
-//     Dates.style.display = "block";
-//   }else if (check1.checked == false && check2.checked == false && check3.checked == true){
-//     Months.style.display = "block";
-//   }else if (check1.checked == true && check2.checked == true && check3.checked == false){
-//     Days.style.display = "block";
-//     Dates.style.display = "block";
-//   }else if (check1.checked == true && check2.checked == false && check3.checked == true){
-//     Days.style.display = "block";
-//     Months.style.display = "block";
-//   }else if (check1.checked == false && check2.checked == true && check3.checked == true){
-//     Dates.style.display = "block";
-//     Months.style.display = "block";
-//   }else if (check1.checked == true && check2.checked == true && check3.checked == true){
-//     Days.style.display = "block";
-//     Dates.style.display = "block";
-//     Months.style.display = "block";
-//   }else if(check1.checked == false && check2.checked == true && check3.checked == true){
-//     Days.style.display = "none";
-//   }else if (check1.checked == true && check2.checked == false && check3.checked == true){
-//     Dates.style.display = "none";
-//   }else if (check1.checked == true && check2.checked == true && check3.checked == false){
-//     Months.style.display = "none";
-//   }else if (check1.checked == false && check2.checked == false && check3.checked == true){
-//     Days.style.display = "none";
-//     Dates.style.display = "none";
-//   }else if (check1.checked == false && check2.checked == true && check3.checked == false){
-//     Days.style.display = "none";
-//     Months.style.display = "none";
-//   }else if (check1.checked == true && check2.checked == false && check3.checked == false){
-//     Dates.style.display = "none";
-//     Months.style.display = "none";
-//   }else if (check1.checked == false && check2.checked == false && check3.checked == false){
-//     Days.style.display = "none";
-//     Dates.style.display = "none";
-//     Months.style.display = "none";
-//   }
-// }
 </script>

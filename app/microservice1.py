@@ -167,7 +167,6 @@ class RequestLaporan:
                     
     #BUAT MENAMPILKAN LIST REQUEST PADA /MENU
     def listRequestUser(self, username):
-        #session['user_id'] = auth_login()
         try: 
             connection = mysql.connector.connect(
             host='localhost',
@@ -191,14 +190,9 @@ class RequestLaporan:
                         cursor.close()
                         connection.close()
                     print("MySQL connection is closed")
+        
 
-    # def convertToBinaryData(self, filename):      
-    #     #Convert digital data to binary format
-    #     with open(filename, 'rb') as file:
-    #         binaryData = file.read()
-    #     return binaryData           
-
-    #BUAT NAMPILIN REQUEST YANG UDAH KELAR
+    #BUAT MENAMPILKAN REQUEST YANG UDAH KELAR
     def listFinished(self, username):
         try:
             connection = mysql.connector.connect(
@@ -306,6 +300,9 @@ class RequestLaporan:
     #BUAT INSERT REQUEST EDIT 
     def requestEditLap(self, prog_id, user_id,req_report, req_kodeLaporan, req_deskripsi,
                            req_tampilan, req_deadline, req_file, req_PIC, req_penerima,
+                           reqSch_hari, reqSch_bulan, reqSch_tanggal,
+                            reqSch_groupBy = 'Dr. Andre Lembong', reqSch_reportPIC = None,
+                           reqSch_ktgriNama = None, reqSch_orgNama = None, reqSch_aktifYN = 'Y',
                            req_dateAccept = None, req_endDate=None, req_status='Waiting', req_prioritas='1'):
         self.req_id = self.generateRequestID()
         self.prog_id = prog_id
@@ -328,6 +325,12 @@ class RequestLaporan:
         self.last_report = TemplateLaporan().getDataReport(req_report)
         self.req_judul = self.last_report[1]
         self.req_tujuan = self.last_report[2]
+
+        self.reqSch_hari = reqSch_hari
+        self.reqSch_bulan = reqSch_bulan
+        self.reqSch_tanggal = reqSch_tanggal
+        self.reqSch_groupBy = reqSch_groupBy
+        self.reqSch_lastUpdate = datetime.datetime.now()
         
         try: 
             connection = mysql.connector.connect(
@@ -340,19 +343,22 @@ class RequestLaporan:
             print("Connected to MySQL database...",db_Info)
 
             cursor = connection.cursor()
-            try:
-                cursor.execute('INSERT INTO t_request VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+            cursor.execute('INSERT INTO t_request VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
                            (self.req_id, prog_id, user_id, self.org_id, self.ktgri_id, req_kodeLaporan, self.req_judul, req_deskripsi,
                            self.req_tujuan, req_tampilan, self.req_periode, req_deadline, req_file, self.req_date,
                             req_dateAccept, req_endDate, self.req_status, req_PIC, req_penerima, req_prioritas))
-            except Error as e:
-                print(e)
+            connection.commit()
+
+            record = cursor.fetchone()
+
+            cursor.execute('INSERT INTO t_reqSchedule VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+                        (self.req_id, reqSch_hari, reqSch_bulan, reqSch_tanggal, reqSch_groupBy, reqSch_reportPIC, reqSch_orgNama, reqSch_ktgriNama, self.reqSch_lastUpdate, reqSch_aktifYN))
             connection.commit()
 
             record = cursor.fetchone()
             print ("Your connected...",record)
 
-            flash('Request berhasil dibuat')
+            
 
         except Error as e :
             print("Error while connecting file MySQL", e)
@@ -364,7 +370,7 @@ class RequestLaporan:
                         connection.close()
                     print("MySQL connection is closed")
 
-
+    #BUAT UPDATE STATUS CANCEL PADA REQUEST
     def cancelRequest(self, request_id):
         self.cancel_request=''
         try: 
@@ -394,11 +400,8 @@ class RequestLaporan:
                         connection.close()
                     print("MySQL connection is closed")
 
-    
-                          
-
-
     ##################################################################################################
+    #BUAT LIST AVAILABLE TASK
     def availableTask(self):
         try:
             connection = mysql.connector.connect(
@@ -419,7 +422,7 @@ class RequestLaporan:
                                             ON  a.user_id = b.user_id
                                         LEFT JOIN m_kategori c
                                             ON  a.ktgri_id = c.ktgri_id
-                                        WHERE req_status LIKE 'Waiting%' ORDER BY req_id desc''')
+                                        WHERE req_status LIKE 'Waiting%' ORDER BY req_deadline asc''')
             listAvailTask = cursor.fetchall()
 
 
@@ -442,6 +445,7 @@ class RequestLaporan:
                 connection.close()
             print("MySQL connection is closed")
 
+    #BUAT LIST TASK PROGRAMMER
     def listTask(self):
         try:
             connection = mysql.connector.connect(
@@ -458,12 +462,8 @@ class RequestLaporan:
             #listTask = cursor.execute(''.join(['SELECT req_id, req_judul, user_name, ktgri_nama, req_date, req_deadline, req_prioritas FROM t_request a LEFT JOIN m_user b ON  a.user_id = b.user_id LEFT JOIN m_kategori c ON  a.ktgri_id = c.ktgri_id WHERE req_PIC = "'+session['username']+'" ORDER BY req_id']))
             listTask = cursor.execute('SELECT req_id, req_judul, user_name, ktgri_nama, req_date, req_deadline, req_prioritas, req_status FROM t_request a LEFT JOIN m_user b ON  a.user_id = b.user_id LEFT JOIN m_kategori c ON  a.ktgri_id = c.ktgri_id WHERE req_status = "On Process" and req_PIC = "'+session['username']+'" ORDER BY req_id desc')
             listTask = cursor.fetchall()
-
-
             
             return listTask
-
-
 
         except Error as e :
             print("Error while connecting file MySQL", e)
@@ -474,39 +474,7 @@ class RequestLaporan:
                 connection.close()
             print("MySQL connection is closed")
 
-
-
-    #GATAU BUAT APA
-    # def getRequestId(self):
-    #         request_id = request.form['buttonDetail']
-    #         try: 
-    #             connection = mysql.connector.connect(
-    #             host='localhost',
-    #             database='cms_template',
-    #             user='root',
-    #             password='qwerty')
-    #             if connection.is_connected():
-    #                 db_Info= connection.get_server_info()
-    #             print("Connected to MySQL database...",db_Info)
-
-    #             cursor = connection.cursor()
-         
-    #             cursor.execute(''.join(['select req_id from t_request where req_id = "'+request_id+'"']))
-                
-    #             listKodeReport = cursor.fetchall()
-                
-    #             return listKodeReport
-
-    #         except Error as e :
-    #             print("Error while connecting file MySQL", e)
-    #         finally:
-    #                 #Closing DB Connection.
-    #                     if(connection.is_connected()):
-    #                         cursor.close()
-    #                         connection.close()
-    #                     print("MySQL connection is closed")
-
-
+    #BUAT DETAIL TASK SAAT TEKAN TOMBOL SELECT
     def getDetailTask(self, request_id):
         self.detail_task=''
         try: 
@@ -520,12 +488,13 @@ class RequestLaporan:
             print("Connected to MySQL database...",db_Info)
 
             cursor = connection.cursor()
-            cursor.execute(''.join(['SELECT a.req_id, req_judul, req_deskripsi, org_nama, ktgri_nama, req_tampilan, req_periode, req_deadline, req_file, reqSch_tanggal, reqSch_bulan, reqSch_hari  FROM t_request a LEFT JOIN m_organisasi b ON a.org_id = b.org_id LEFT JOIN m_kategori c ON a.ktgri_id = c.ktgri_id LEFT JOIN t_reqSchedule d ON a.req_id = d.req_id  WHERE a.req_id = "'+request_id+'"']))            
+            cursor.execute(''.join(['SELECT a.req_id, req_judul, req_deskripsi, org_nama, ktgri_nama, req_tampilan, req_periode, req_deadline, req_file, reqSch_tanggal, reqSch_bulan, reqSch_hari, req_kodeLaporan  FROM t_request a LEFT JOIN m_organisasi b ON a.org_id = b.org_id LEFT JOIN m_kategori c ON a.ktgri_id = c.ktgri_id LEFT JOIN t_reqSchedule d ON a.req_id = d.req_id  WHERE a.req_id = "'+request_id+'"']))            
            
 
            
             detail_task = cursor.fetchone()
-         
+            
+            print(detail_task)
             return detail_task
 
         except Error as e :
@@ -553,7 +522,7 @@ class RequestLaporan:
 
             cursor = connection.cursor()
 
-            cursor.execute('update t_request set req_dateAccept = "'+str(self.accReq)+'",req_status = "On Process", req_PIC = "'+session['username']+'" where req_id = "'+request_id+'"')
+            cursor.execute('update t_request set req_dateAccept = "'+str(self.accReq)+'",req_status = "On Process", req_PIC = "'+session['username']+'", prog_id = "'+session['user_id']+'" where req_id = "'+request_id+'"')
 
             connection.commit()
             confirmReq = cursor.fetchall()
@@ -600,6 +569,8 @@ class RequestLaporan:
     #                     connection.close()
     #                 print("MySQL connection is closed")
 
+
+    #BUAT UPDATE STATUS REQUEST 
     def confirmRequest(self, request_id):
         self.confirm_request =''
         try: 
@@ -686,7 +657,8 @@ class RequestLaporan:
         #print(RequestLaporan().prosesLogin('Monica','1234'))
         #print (RequestLaporan().getUserID('yoona'))
 
-        #Programmer telah selesai mengerjakan request dan menginput kode Laporan untuk request tsb
+    #BUAT PROGRAMMER TELAH SELESAI MENGERJAKAN REQUEST DAN 
+    #MENGINPUT KODE LAPORAN UNTUK REQUEST TERSEBUT 
     def listKodeLaporan(self):
         try:
             connection = mysql.connector.connect(
@@ -713,6 +685,7 @@ class RequestLaporan:
                         connection.close()
                     print("MySQL connection is closed") 
 
+    #BUAT TOMBOL FINISH CONNECT TO DB TO GET STATUS GINISHED
     def finishRequest(self, request_id):
         self.finish_request =''
         try: 
@@ -742,6 +715,7 @@ class RequestLaporan:
                         connection.close()
                     print("MySQL connection is closed")    
 
+    #BUAT TOMBOL FINISH UNTUK INPUT KODE REPORT DI TASK PROGRAMMER
     def inputKodeFinish(self, request_id, kodLap):
         self.endDate = datetime.datetime.now()
         
@@ -776,5 +750,3 @@ class RequestLaporan:
                         connection.close()
                     print("MySQL connection is closed")
 
-# print(RequestLaporan().listRequestUser("P190360"))
-#print(RequestLaporan().listFinished("P190360"))
