@@ -4,6 +4,7 @@ import pymysql
 import random
 import mysql.connector
 from mysql.connector import Error
+import json
 
 
 class Template:
@@ -20,6 +21,52 @@ class Template:
         self.jumlahFooter = ''
         self.periode = ''
         self.printAll = ''
+
+    def listKodeOrgServ(self):
+        try: 
+            connection = mysql.connector.connect(
+            host='localhost',
+            database='cms_template',
+            user='root',
+            password='qwerty')
+            if connection.is_connected():
+                db_Info= connection.get_server_info()
+            print("Connected to MySQL database...",db_Info)
+
+            cursor = connection.cursor()
+
+            
+            listKodeOrgServ = cursor.execute('select report_id, server_nama, org_nama from M_report a LEFT JOIN cms_request.m_organisasi c ON a.Org_id = c.org_id  left join M_server b ON b.server_id = a.server_id')
+            listKodeOrgServ = cursor.fetchall()
+
+            
+
+            for row in listKodeOrgServ:
+                    repId = row[0]
+                    servName = row[1]
+                    orgName = row[2]
+
+            x = {
+            "kodeReport": row[0],
+            "namaServ": row[1],
+            "namaorg": row[2]
+            }
+
+            y = json.dumps(x)
+             
+            print(y) 
+            return listKodeReport
+            
+        
+        except Error as e :
+            print("Error while connecting file MySQL", e)
+        finally:
+            #Closing DB Connection.
+            if(connection.is_connected()):
+                    cursor.close()
+                    connection.close()
+            print("MySQL connection is closed")
+
 
     def listKodeReport(self):
         try: 
@@ -130,93 +177,142 @@ class Template:
 
             return listKategori
         #Template
-#         def addNewTemplate(self):
+    #         def addNewTemplate(self):
 
-#             kodeLaporan = request.form['XXXX']
-#             namaOrganisasi = request.form['XXXX']
-#             namaServer = request.form['XXXX']
-#             namaLaporan = request.form['XXXX']
-#             jumlahKolom = request.form['XXXX']
-#             jumlahHeader = request.form['XXXX']
-#             jumlahFooter = request.form['XXXX']
-#             periode = request.form['XXXX']
-#             printAll = request.form['XXXX']
+    #             kodeLaporan = request.form['XXXX']
+    #             namaOrganisasi = request.form['XXXX']
+    #             namaServer = request.form['XXXX']
+    #             namaLaporan = request.form['XXXX']
+    #             jumlahKolom = request.form['XXXX']
+    #             jumlahHeader = request.form['XXXX']
+    #             jumlahFooter = request.form['XXXX']
+    #             periode = request.form['XXXX']
+    #             printAll = request.form['XXXX']
 
-#             cursor = connection.cursor()
+    #             cursor = connection.cursor()
 
-#             sql = 'INSERT INTO m_report VALUES %s, %s, %s, %s, %s, %s, %s, %s, %s '
-#             val = kodeLaporan, namaOrganisasi, namaServer, namaLaporan, jumlahKolom, jumlahHeader, jumlahFooter, periode, printAll
+    #             sql = 'INSERT INTO m_report VALUES %s, %s, %s, %s, %s, %s, %s, %s, %s '
+    #             val = kodeLaporan, namaOrganisasi, namaServer, namaLaporan, jumlahKolom, jumlahHeader, jumlahFooter, periode, printAll
 
-#             cursor.execute(sql,val)
+    #             cursor.execute(sql,val)
 
-#             connection.commit()
+    #             connection.commit()
 
-#             print("Template berhasil dibuat")
-
-
-#         def addQuery(self):
-
-#             kodeLaporan = request.form['']
-
-#             q1 = request.form['XXXX']
-#             q2 = request.form['XXXX']
-#             q3 = request.form['XXXX']
-#             q4 = request.form['XXXX']
-#             q5 = request.form['XXXX']
-#             q6 = request.form['XXXX']
-#             q7 = request.form['XXXX']
-#             q8 = request.form['XXXX']
-#             q9 = request.form['XXXX']
-#             q10 = request.form['XXXX']
-#             q11 = request.form['XXXX']
-#             q12 = request.form['XXXX']
-#             q13 = request.form['XXXX']
-#             q14 = request.form['XXXX']
-
-#             cursor = connection.cursor()
-
-#             sql = 'INSERT INTO XXTABLEXX VALUES %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s WHERE XLAPORANIDX =' +kodeLaporan+
-#             val = q1, q2, namaServer, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14
-
-#             cursor.execute(sql,val)
-#             connection.commit()
-
-#             print("Query telah berhasil disimpan")
+    #             print("Template berhasil dibuat")
 
 
+    #         def addQuery(self):
 
-# #Perubahan
-#         def editTemplate(self, kodeLaporan, namaOrganisasi, namaServer):
-#             q1 = request.form['XXXX']
-#             q2 = request.form['XXXX']
-#             q3 = request.form['XXXX']
-#             q4 = request.form['XXXX']
-#             q5 = request.form['XXXX']
-#             q6 = request.form['XXXX']
-#             q7 = request.form['XXXX']
-#             q8 = request.form['XXXX']
-#             q9 = request.form['XXXX']
-#             q10 = request.form['XXXX']
-#             q11 = request.form['XXXX']
-#             q12 = request.form['XXXX']
-#             q13 = request.form['XXXX']
-#             q14 = request.form['XXXX']
+    #             kodeLaporan = request.form['']
 
-#             cursor = connection.cursor()
+    #             q1 = request.form['XXXX']
+    #             q2 = request.form['XXXX']
+    #             q3 = request.form['XXXX']
+    #             q4 = request.form['XXXX']
+    #             q5 = request.form['XXXX']
+    #             q6 = request.form['XXXX']
+    #             q7 = request.form['XXXX']
+    #             q8 = request.form['XXXX']
+    #             q9 = request.form['XXXX']
+    #             q10 = request.form['XXXX']
+    #             q11 = request.form['XXXX']
+    #             q12 = request.form['XXXX']
+    #             q13 = request.form['XXXX']
+    #             q14 = request.form['XXXX']
 
-#             sql = 'UPDATE m_report set ' +kodeLaporan+
-#             val = q1, q2, namaServer, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14
+    #             cursor = connection.cursor()
 
-#             cursor.execute(sql,val)
-#             connection.commit()
+    #             sql = 'INSERT INTO XXTABLEXX VALUES %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s WHERE XLAPORANIDX =' +kodeLaporan+
+    #             val = q1, q2, namaServer, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14
 
-#             print("Query telah berhasil disimpan")
+    #             cursor.execute(sql,val)
+    #             connection.commit()
+
+    #             print("Query telah berhasil disimpan")
 
 
-# ###############################################################################################
 
-# class schedule(self, kode_laporan, organisasi, server, kategori, header, keterangan, note, penerima, grouping, jadwal, orderby):
-#     #Mengambil kode report
+    # #Perubahan
+    #         def editTemplate(self, kodeLaporan, namaOrganisasi, namaServer):
+    #             q1 = request.form['XXXX']
+    #             q2 = request.form['XXXX']
+    #             q3 = request.form['XXXX']
+    #             q4 = request.form['XXXX']
+    #             q5 = request.form['XXXX']
+    #             q6 = request.form['XXXX']
+    #             q7 = request.form['XXXX']
+    #             q8 = request.form['XXXX']
+    #             q9 = request.form['XXXX']
+    #             q10 = request.form['XXXX']
+    #             q11 = request.form['XXXX']
+    #             q12 = request.form['XXXX']
+    #             q13 = request.form['XXXX']
+    #             q14 = request.form['XXXX']
+
+    #             cursor = connection.cursor()
+
+    #             sql = 'UPDATE m_report set ' +kodeLaporan+
+    #             val = q1, q2, namaServer, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14
+
+    #             cursor.execute(sql,val)
+    #             connection.commit()
+
+    #             print("Query telah berhasil disimpan")
+
+
+    ###############################################################################################
+
+class Schedule:
+    def __init__(self):
+        self.kode_laporan = ''
+        self.organisasi = ''
+        self.server = ''
+        self.kategori = ''
+        self.header = ''
+        self.keterangan = ''
+        self.note = ''
+        self.penerima = ''
+        self.reportPIC = ''
+        self.grouping = ''
+        self.jadwal = ''
+        self.orderby = ''
+        
+
+
+
+    def showDetailSchedule(self):
+        self.kode_laporan = ''
+        
+        try:
+            connection = mysql.connector.connect(
+            host = 'localhost',
+            database = 'cms_template',
+            user = 'root',
+            password = 'qwerty'
+            )
+
+            if connection.is_connected():
+                db_Info= connection.get_server_info()
+            print("Connected to MySQL database...",db_Info)
+
+            cursor = connection.cursor()
+
+            cursor.execute('SELECT report_judul, report_deskripsi, sch_note, sch_reportPIC, sch_penerima, sch_groupBy, sch_aktifYN from t_schedule a LEFT JOIN m_report b ON b.report_id = a.report_id WHERE b.report_id = "'+kode_laporan+'" ')
+
+
+            detailSchedule = cursor.fetchall()
+
+            return detailSchedule
+
+        except Error as e :
+            print("Error while connecting file MySQL", e)
+        finally:
+        #Closing DB Connection.
+            if(connection.is_connected()):
+                    cursor.close()
+                    connection.close()
+            print("MySQL connection is closed")
+
 
 
 #     #Untuk membuat schedule baru
