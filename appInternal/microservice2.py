@@ -5,7 +5,7 @@ import random
 import mysql.connector
 from mysql.connector import Error
 import json
-
+    
 
 class Template:
 
@@ -55,7 +55,7 @@ class Template:
             y = json.dumps(x)
              
             print(y) 
-            return listKodeReport
+            return listKodeOrgServ
             
         
         except Error as e :
@@ -104,10 +104,9 @@ class Template:
 
 
         #Mengambil nama organisasi spesifik
-    def listNamaOrganisasi(self, report_id):
+    def listNamaOrganisasi(self):
         self.list_org = ''
         # if request.method == 'POST':
-        report_id = request.form['valKode']
     
         try: 
             connection = mysql.connector.connect(
@@ -121,7 +120,7 @@ class Template:
 
             cursor = connection.cursor()
 
-            listOrg = cursor.execute('SELECT org_nama FROM cms_template.m_report t1 JOIN cms_request.m_organisasi t2 ON t2.org_id = t1.org_id WHERE report_id ="' +report_id+'"')
+            listOrg = cursor.execute('SELECT org_id, org_nama FROM cms_request.m_organisasi ORDER BY org_nama')
             #listOrg = cursor.execute('select org_id, org_nama from m_organisasi where org_aktifYN = "Y" order by org_id')            
             listOrg = cursor.fetchall()
 
@@ -168,37 +167,80 @@ class Template:
 
 
 
-        #Mengambil list kategori
-        def listKategori():
-            db = get_cms_request()
-            cursor = db.cursor()
+    #Mengambil list kategori
+    def listKategori(self):
+        try: 
+            connection = mysql.connector.connect(
+            host='localhost',
+            database='cms_request',
+            user='root',
+            password='qwerty')
+            if connection.is_connected():
+                db_Info= connection.get_server_info()
+            print("Connected to MySQL database...",db_Info)
 
-            listKategori = cursor.execute('SELECT kategori_nama from m_kategori')
+            cursor = connection.cursor()
+
+            listKategori = cursor.execute('SELECT ktgri_id, ktgri_nama from m_kategori order by ktgri_nama')
+
+            listKategori = cursor.fetchall()
 
             return listKategori
-        #Template
-    #         def addNewTemplate(self):
 
-    #             kodeLaporan = request.form['XXXX']
-    #             namaOrganisasi = request.form['XXXX']
-    #             namaServer = request.form['XXXX']
-    #             namaLaporan = request.form['XXXX']
-    #             jumlahKolom = request.form['XXXX']
-    #             jumlahHeader = request.form['XXXX']
-    #             jumlahFooter = request.form['XXXX']
-    #             periode = request.form['XXXX']
-    #             printAll = request.form['XXXX']
+        except Error as e :
+            print("Error while connecting file MySQL", e)
+        finally:
+        #Closing DB Connection.
+            if(connection.is_connected()):
+                    cursor.close()
+                    connection.close()
+            print("MySQL connection is closed")
 
-    #             cursor = connection.cursor()
 
-    #             sql = 'INSERT INTO m_report VALUES %s, %s, %s, %s, %s, %s, %s, %s, %s '
-    #             val = kodeLaporan, namaOrganisasi, namaServer, namaLaporan, jumlahKolom, jumlahHeader, jumlahFooter, periode, printAll
+    #Template
+    def addNewTemplate(self, kode_laporan, server_id, report_judul, report_deskripsi,
+                        report_header, report_footer, report_jmlTampilan,
+                        report_periode, report_createDate, report_userUpdate, 
+                        report_lastUpdate, report_aktifYN, org_id, ktgri_id,
+                        report_printAllYN, report_createdUser):
+        try: 
+            connection = mysql.connector.connect(
+            host='localhost',
+            database='cms_template',
+            user='root',
+            password='qwerty')
+            if connection.is_connected():
+                db_Info= connection.get_server_info()
+            print("Connected to MySQL database...",db_Info)
+        
 
-    #             cursor.execute(sql,val)
+            cursor = connection.cursor()
 
-    #             connection.commit()
+            cursor.execute('INSERT INTO m_report VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', 
+                        (kode_laporan, server_id, report_judul, report_deskripsi, report_header, 
+                        report_footer, report_jmlTampilan,
+                        report_periode, report_createDate, report_userUpdate, 
+                        report_lastUpdate, report_aktifYN, org_id, ktgri_id,
+                        report_printAllYN, report_createdUser))
+            
 
-    #             print("Template berhasil dibuat")
+            
+
+            connection.commit()
+
+            print("Template berhasil dibuat")
+
+
+        except Error as e :
+            print("Error while connecting file MySQL", e)
+        finally:
+        #Closing DB Connection.
+            if(connection.is_connected()):
+                    cursor.close()
+                    connection.close()
+            print("MySQL connection is closed")
+
+    
 
 
     #         def addQuery(self):
@@ -271,17 +313,177 @@ class Schedule:
         self.header = ''
         self.keterangan = ''
         self.note = ''
-        self.penerima = ''
+        self.reportPenerima = ''
         self.reportPIC = ''
         self.grouping = ''
-        self.jadwal = ''
+        self.jadwalBln = ''
+        self.jadwalHari = ''
+        self.jadwalTgl = ''
         self.orderby = ''
+        self.aktifYN = ''
         
 
 
+    #BUAT MENAMPILKAN LIST PIC DARI MYSQL
+    def namaPIC(self):
+        try: 
+            connection = mysql.connector.connect(
+            host='localhost',
+            database='cms_request',
+            user='root',
+            password='qwerty')
+            if connection.is_connected():
+                db_Info= connection.get_server_info()
+            print("Connected to MySQL database...",db_Info)
 
-    def showDetailSchedule(self):
-        self.kode_laporan = ''
+            cursor = connection.cursor()
+     
+            cursor.execute(''.join(['select user_id, user_name, user_email from m_user where user_flag = "User" ']))
+            
+            listPIC = cursor.fetchall()
+
+             
+            return listPIC
+            
+
+        except Error as e :
+                print("Error while connecting file MySQL", e)
+        finally:
+                #Closing DB Connection.
+                    if(connection.is_connected()):
+                        cursor.close()
+                        connection.close()
+                    print("MySQL connection is closed")
+    def namaPenerima(self):
+        try: 
+            connection = mysql.connector.connect(
+            host='localhost',
+            database='cms_request',
+            user='root',
+            password='qwerty')
+            if connection.is_connected():
+                db_Info= connection.get_server_info()
+            print("Connected to MySQL database...",db_Info)
+
+            cursor = connection.cursor()
+     
+            cursor.execute(''.join(['select user_id, user_name, user_email from m_user where user_flag = "User" ']))
+            
+            listPen = cursor.fetchall()
+
+             
+            return listPen
+            
+
+        except Error as e :
+                print("Error while connecting file MySQL", e)
+        finally:
+                #Closing DB Connection.
+                    if(connection.is_connected()):
+                        cursor.close()
+                        connection.close()
+                    print("MySQL connection is closed")
+
+    def getOrgLaporan(self, kode_laporan):
+        try:
+            connection = mysql.connector.connect(
+            host = 'localhost',
+            database = 'cms_request',
+            user = 'root',
+            password = 'qwerty'
+            )
+
+            if connection.is_connected():
+                db_Info= connection.get_server_info()
+            print("Connected to MySQL database...",db_Info)
+
+            cursor = connection.cursor()
+
+            cursor.execute('SELECT org_nama from m_organisasi a LEFT JOIN cms_template.m_report b ON b.org_id = a.org_id WHERE report_id ="'+kode_laporan+'"')
+
+            org = cursor.fetchone()
+            clear = str(org).replace("('",'').replace("',)","")
+            return clear
+
+        except Error as e :
+            print("Error while connecting file MySQL", e)
+        finally:
+        #Closing DB Connection.
+            if(connection.is_connected()):
+                    cursor.close()
+                    connection.close()
+            print("MySQL connection is closed")
+
+    def getKategoriLaporan(self, kode_laporan):
+        try:
+            connection = mysql.connector.connect(
+            host = 'localhost',
+            database = 'cms_request',
+            user = 'root',
+            password = 'qwerty'
+            )
+
+            if connection.is_connected():
+                db_Info= connection.get_server_info()
+            print("Connected to MySQL database...",db_Info)
+
+            cursor = connection.cursor()
+
+            cursor.execute('SELECT ktgri_nama from m_kategori a LEFT JOIN cms_template.m_report b ON b.ktgri_id = a.ktgri_id WHERE report_id ="'+kode_laporan+'"')
+
+            kategori = cursor.fetchone()
+            clear = str(kategori).replace("('",'').replace("',)","")
+            return clear
+            
+        except Error as e :
+            print("Error while connecting file MySQL", e)
+        finally:
+        #Closing DB Connection.
+            if(connection.is_connected()):
+                    cursor.close()
+                    connection.close()
+            print("MySQL connection is closed")
+
+    def listMaker(self , kode_laporan):
+        try:
+            connection = mysql.connector.connect(
+            host = 'localhost',
+            database = 'cms_template',
+            user = 'root',
+            password = 'qwerty'
+            )
+
+            if connection.is_connected():
+                db_Info= connection.get_server_info()
+            print("Connected to MySQL database...",db_Info)
+
+            cursor = connection.cursor()
+
+            
+            cursor.execute('SELECT sch_tanggal from t_schedule WHERE report_id = "'+kode_laporan+'" ')
+            sch_tanggal = cursor.fetchall()
+            cursor.execute('SELECT sch_hari from t_schedule WHERE report_id = "'+kode_laporan+'" ')
+            sch_hari = cursor.fetchall()
+            cursor.execute('SELECT sch_bulan from t_schedule WHERE report_id = "'+kode_laporan+'" ')
+            sch_bulan = cursor.fetchall()
+
+
+            print(sch_tanggal)
+            print(sch_hari)
+            print(sch_bulan)
+            return sch_tanggal
+
+        except Error as e :
+            print("Error while connecting file MySQL", e)
+        finally:
+        #Closing DB Connection.
+            if(connection.is_connected()):
+                    cursor.close()
+                    connection.close()
+            print("MySQL connection is closed")
+
+    def showDetailSchedule(self, kode_laporan):
+        # kode_laporan = request.form['valKode']
         
         try:
             connection = mysql.connector.connect(
@@ -297,11 +499,12 @@ class Schedule:
 
             cursor = connection.cursor()
 
-            cursor.execute('SELECT report_judul, report_deskripsi, sch_note, sch_reportPIC, sch_penerima, sch_groupBy, sch_aktifYN from t_schedule a LEFT JOIN m_report b ON b.report_id = a.report_id WHERE b.report_id = "'+kode_laporan+'" ')
+            cursor.execute('SELECT report_judul, report_deskripsi, sch_note, sch_reportPIC, sch_penerima, sch_groupBy, sch_bulan, sch_hari, sch_tanggal, sch_aktifYN from t_schedule a LEFT JOIN m_report b ON b.report_id = a.report_id WHERE b.report_id = "'+kode_laporan+'" ')
 
 
-            detailSchedule = cursor.fetchall()
+            detailSchedule = cursor.fetchone()
 
+            print(detailSchedule)
             return detailSchedule
 
         except Error as e :
@@ -315,27 +518,58 @@ class Schedule:
 
 
 
-#     #Untuk membuat schedule baru
-#     def addSchedule():
-#         kode_laporan = request.getform['']
-#         organisasi = request.getform['']
-#         server = request.getform['']
-#         kategori = request.getform['']
-#         header = request.getform['']
-#         keterangan = request.getform['']
-#         note = request.getform['']
-#         penerima = request.getform['']
-#         grouping = request.getform['']
-#         orderby = request.getform['']
-#         jadwal = request.getform['']
+    #Untuk membuat schedule baru
+    def addSchedule(self, kode_laporan, header, keterangan, note, reportPIC, reportPenerima, 
+                    grouping, jadwalBln, jadwalHari, jadwalTgl,  org, kategori, sch_id = '',
+                    aktifYN = 'Y', queryId = '', lastUpdate = datetime.datetime.now()):
 
-#         sql = 'INSERT INTO m_schedule VALUES %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s'
-#         val = kode_laporan, organisasi, server, kategori, header, keterangan, note, penerima, grouping, orderby, jadwal
+        # self.kode_laporan   = kode_laporan
+        # self.header         = header
+        # self.keterangan     = keterangan
+        # self.note           = note
+        # self.reportPIC      = reportPIC
+        # self.reportPenerima = reportPenerima
+        # self.grouping       = grouping
+        # self.jadwalBln      = jadwalBln
+        # self.jadwalHari     = jadwalHari
+        # self.jadwalTgl      = jadwalTgl
+        # self.sch_id         = ''
+        # self.org            = org
+        # self.kategori       = kategori
+        # self.aktifYN        = aktifYN
+        # self.lastUpdate     = lastUpdate
+        # self.queryId        = queryId
+        
 
-#         cursor.execute(sql,val)
+        try:
+            connection = mysql.connector.connect(
+            host='localhost',
+            database='cms_template',
+            user='root',
+            password='qwerty')
+            if connection.is_connected():
+                db_Info= connection.get_server_info()
+            print("Connected to MySQL database...",db_Info)
 
-#         db.commit()
+            cursor = connection.cursor()
 
+            
+
+            cursor.execute('INSERT INTO t_schedule VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+                (sch_id, kode_laporan, queryId, jadwalHari, jadwalBln, jadwalTgl, grouping,
+                    reportPIC, org, kategori, lastUpdate, aktifYN, keterangan, note, reportPenerima))
+            
+
+            connection.commit()
+
+        except Error as e :
+            print("Error while connecting file MySQL", e)
+        finally:
+                #Closing DB Connection.
+                    if(connection.is_connected()):
+                        cursor.close()
+                        connection.close()
+                    print("MySQL connection is closed")
 
 
 
