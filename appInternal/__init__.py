@@ -10,13 +10,23 @@ app.static_folder = 'static'
 app.secret_key = 'session1'
 
 
+
+
+@app.route('/cekTemplate')
+def cekTemplate():
+
+
+	return render_template('cekReport.html')
+
+
 ######################################					ADD NEW TEMPLATE
 @app.route('/addTemplate')
 def addTemplate():
 	ms2T = Template()
 
 	return render_template('addNewTemplate.html', listServer = ms2T.listNamaServer(), 
-		listOrg = ms2T.listNamaOrganisasi(), listKategori = ms2T.listKategori())
+		listOrg = ms2T.listNamaOrganisasi(), listKategori = ms2T.listKategori(),
+		listKodeReport = ms2T.listKodeReport())
 	
 
 @app.route('/prosesAddNewTemplate', methods =['POST','GET'])
@@ -24,7 +34,7 @@ def addNewTemplate():
 	if request.method == 'POST':
 		ms2T = Template()
 
-		kode_laporan 		= request.form['kodeLaporan']
+		kode_laporan 		= request.form['kodeLaporan2']
 		server_id 			= request.form['server']
 		report_judul 		= request.form['namaLaporan']
 		report_deskripsi 	= request.form['filter']
@@ -40,16 +50,50 @@ def addNewTemplate():
 		ktgri_id 			= request.form['kategori']
 		report_printAllYN 	= request.form['printAll']
 		report_createdUser  = 'testUser'
+		report_scheduleYN	= 'N'
 
+		
 		
 		ms2T.addNewTemplate(kode_laporan, server_id, report_judul, report_deskripsi,
 						report_header, report_footer, report_jmlTampilan,
 						report_periode, report_createDate, report_userUpdate, 
 		                report_lastUpdate, report_aktifYN, org_id, ktgri_id,
-		                report_printAllYN, report_createdUser)
+		                report_printAllYN, report_createdUser, report_scheduleYN)
 
-		return redirect(url_for('menu'))
+		
+		# return redirect(url_for('newFormatTemplate'))
+		return render_template('formatTemplate.html', detailTemplate = ms2T.addDetailTemplate(kode_laporan),
+		kode_laporan=kode_laporan)
 
+
+#Edit format template yang sudah dibuat
+@app.route('/formatTemplate', methods=['POST','GET'])
+def formatTemplate():
+	
+
+	if request.method == 'POST':
+
+		ms2T = Template()
+		
+		
+		kode_laporan 		= request.form['kodeLaporan']
+
+		
+		return render_template('formatTemplate.html', detailTemplate = ms2T.addDetailTemplate(kode_laporan),
+			kode_laporan=kode_laporan)
+	return redirect(url_for('addTemplate'))
+	
+
+#Membuat format template setelah addNewTemplate
+@app.route('/newFormatTemplate', methods=['POST'])
+def newFormat():
+	ms2T = Template()
+
+	kode_laporan = request.form['kodeLaporan2']
+
+
+	return render_template('formatTemplate.html', detailTemplate = ms2T.addDetailTemplate(kode_laporan),
+		kode_laporan=kode_laporan)
 
 
 ######################################					ADD NEW SCHEDULE
@@ -58,8 +102,9 @@ def addSchedule():
 	ms2T = Template()
 	ms2S = Schedule()
 
-	return render_template('addNewSchedule.html', listKodeReport = ms2T.listKodeReport(),
-		listPIC = ms2S.namaPIC(), listPen = ms2S.namaPenerima())
+	return render_template('addNewSchedule.html', listKodeReport = ms2T.listKodeReportAddNewSchedule(),
+		listPIC = ms2S.namaPIC(), listPen = ms2S.namaPenerima(), 
+		)
 
 @app.route('/prosesAddNewSchedule', methods=['POST','GET'])
 def addNewSchedule():
@@ -134,6 +179,76 @@ def addNewSchedule():
 
 
 
+
+#####	#	#	####	#####	#	#	
+#	#	#	#	#		#	#	  #
+#	#	#	#	####	####	  #
+######	#####	####	#	#	  #
+
+
+
+
+############				QUERY
+@app.route('/insertQuery')
+def insertQuery():
+	ms2T = Template()
+
+
+
+	return render_template('insertQuery.html', clearQ = ms2T.insQuery())
+
+
+@app.route('/prosesInsertQuery', methods=['POST'])
+def prosesInsertQuery():
+	ms2T = Template()
+	quer = []
+	kode_laporan = request.form['kodLap']
+	if request.method == 'POST':
+		for query in ['query1', 'query2', 'query3', 'query4', 'query5', 'query6', 'query7', 'query8', 'query9', 'query10', 'query11', 'query12', 'query13', 'query14']:
+			
+			if (request.form[query] is not  None) and (request.form[query] is not ''):
+				quer.append(request.form[query])
+
+		ms2T.addQuery(kode_laporan,quer)
+		return redirect(url_for('menu'))
+
+
+@app.route('/editQuery', methods = ['POST', 'GET'])
+def editQuery():
+	ms2T= Template()
+
+	if request.method == 'POST':
+		ms2T = Template()
+
+		kode_laporan = request.form['kodLap']
+
+
+		return render_template('insertQuery.html', editQ = ms2T.viewEditQuery(kode_laporan),
+								kode_laporan=kode_laporan)
+
+
+	return render_template('perubahan.html', listKodeReportQuery=ms2T.listKodeReportQuery()
+							)
+
+
+# @app.route('/prosesEditQuery', methods = ['POST'])
+# def prosesEditQuery():
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ######################################					EDIT SCHEDULE
 @app.route('/editSchedule', methods=['POST', 'GET'])
 def formEditSchedule():
@@ -165,7 +280,7 @@ def start():
 	if request.method == 'POST':
 		
 		kode_laporan = request.form['valKode']
-
+		
 		ms2T = Template()
 		ms2S = Schedule()
 		ms2S.listMaker(kode_laporan)
@@ -179,10 +294,35 @@ def start():
 	
 
 
+# @app.route('/prosesSimpanEditSchedule', methods=['POST'])
+# def prosesSimpanEditSchedule():
+# 	print( "===============/prosesSimpanEditSchedule===============")
+# 	ms2S = Schedule()
+
+# 	if request.method == 'POST':
+
+# 		kode_laporan = request.form['kodLap']
+# 		header = 
+# 		keterangan = 
+# 		note = 
+# 		pic = 
+# 		penerima = 
+# 		grouping = 
+# 		jadwalTgl = 
+# 		jadwalBln = 
+# 		jadwalHari =
+# 		aktifYN =  
 
 
-	
-	
+
+
+#############################################          MODIFY USER
+@app.route('/changePass')
+def modifyUser():
+	return render_template('changePass.html')
+
+
+
 	
 
 
